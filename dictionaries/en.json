@@ -1,0 +1,13 @@
+{
+    "home": {
+        "title": "Video Marketplace",
+        "welcome": "Welcome to the Future of Hiring"
+    },
+    "nav": {
+        "home": "Home",
+        "liked": "Liked",
+        "inbox": "Inbox",
+        "saved": "Saved",
+        "profile": "Profile"
+    }
+}
