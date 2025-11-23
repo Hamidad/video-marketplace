@@ -12,7 +12,8 @@ export const INDUSTRIES = [
 export const MOCK_FEED = [
     {
         id: '1',
-        videoSrc: 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', // Placeholder
+        name: 'John Doe',
+        videoSrc: 'http://www.walrusandcarpenter.com/assets/verticalvideo/RW20seconds_1.mp4',
         poster: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg',
         username: 'johndoe_dev',
         userAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=John',
@@ -20,10 +21,26 @@ export const MOCK_FEED = [
         industry: 'Tech',
         likes: 1240,
         comments: 85,
+        resumeDetails: {
+            bio: "Passionate frontend developer with a focus on performance and accessibility.",
+            experience: "5 years at Tech Corp, 2 years at Startup Inc.",
+            education: "BS Computer Science, University of Tech (2018)",
+            certifications: ["AWS Certified Developer", "Meta Frontend Developer"],
+            skills: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
+        },
+        jobDetails: {
+            title: "Senior Frontend Developer",
+            salary: "$120k - $150k",
+            description: "We are looking for a senior developer to lead our frontend team.",
+            requirements: ["5+ years experience", "Strong React skills", "Team player"],
+        },
+        jobType: 'Full-time',
+        tags: ["React", "Frontend", "Senior"]
     },
     {
         id: '2',
-        videoSrc: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', // Placeholder
+        name: 'Sarah Smith',
+        videoSrc: 'http://www.walrusandcarpenter.com/assets/verticalvideo/RW20seconds_2.mp4',
         poster: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg',
         username: 'sarah_design',
         userAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
@@ -31,10 +48,26 @@ export const MOCK_FEED = [
         industry: 'Creative',
         likes: 856,
         comments: 42,
+        resumeDetails: {
+            bio: "Creative designer with a knack for user-centric interfaces.",
+            experience: "Freelance for 3 years, Agency work for 2 years.",
+            education: "BA Graphic Design, Art Institute (2019)",
+            certifications: ["Google UX Design Certificate"],
+            skills: ["Figma", "Adobe XD", "Prototyping", "User Research"],
+        },
+        jobDetails: {
+            title: "Lead UX Designer",
+            salary: "$100k - $130k",
+            description: "Join our creative team to design the next generation of our product.",
+            requirements: ["Portfolio required", "Experience with design systems"],
+        },
+        jobType: 'Freelance',
+        tags: ["UX/UI", "Design", "Figma"]
     },
     {
         id: '3',
-        videoSrc: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', // Placeholder
+        name: 'Mike Johnson',
+        videoSrc: 'http://www.walrusandcarpenter.com/assets/verticalvideo/RW20seconds_1.mp4', // Reusing video 1 for now
         poster: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg',
         username: 'mike_sales',
         userAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mike',
@@ -42,5 +75,100 @@ export const MOCK_FEED = [
         industry: 'Business',
         likes: 2100,
         comments: 150,
+        resumeDetails: {
+            bio: "Results-driven sales professional with a proven track record.",
+            experience: "VP of Sales at Big Corp, Sales Manager at Mid Corp.",
+            education: "MBA, Business School (2015)",
+            certifications: ["Certified Sales Professional (CSP)"],
+            skills: ["B2B Sales", "Negotiation", "CRM", "Leadership"],
+        },
+        jobDetails: {
+            title: "VP of Sales",
+            salary: "$150k - $200k + Commission",
+            description: "Scale our sales operations and drive revenue growth.",
+            requirements: ["10+ years experience", "Proven leadership", "Strategic thinker"],
+        },
+        jobType: 'Full-time',
+        tags: ["Sales", "Business", "B2B"]
     },
+    {
+        id: '4',
+        name: 'Emily Chen',
+        videoSrc: 'http://www.walrusandcarpenter.com/assets/verticalvideo/RW20seconds_2.mp4',
+        poster: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/TearsOfSteel.jpg',
+        username: 'emily_nurse',
+        userAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emily',
+        description: 'Registered Nurse with 7 years of experience in ER and ICU. Compassionate and dedicated. #healthcare #nursing',
+        industry: 'Healthcare',
+        likes: 3400,
+        comments: 120,
+        resumeDetails: {
+            bio: "Dedicated Registered Nurse with extensive experience in critical care.",
+            experience: "7 years at City General Hospital (ER & ICU).",
+            education: "BS Nursing, State University (2016)",
+            certifications: ["RN License", "ACLS", "BLS"],
+            skills: ["Critical Care", "Patient Advocacy", "Triage", "EMR"],
+        },
+        jobDetails: {
+            title: "ICU Nurse",
+            salary: "$90k - $110k",
+            description: "Seeking experienced RN for our Intensive Care Unit.",
+            requirements: ["BSN required", "2+ years ICU experience", "Night shift availability"],
+        },
+        jobType: 'Full-time',
+        tags: ["Nursing", "Healthcare", "ICU"]
+    },
+    {
+        id: '5',
+        name: 'David Wilson',
+        videoSrc: 'http://www.walrusandcarpenter.com/assets/verticalvideo/RW20seconds_1.mp4',
+        poster: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg',
+        username: 'dave_electric',
+        userAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=David',
+        description: 'Master Electrician specializing in commercial installations. Reliable and safety-focused. #trades #electrician',
+        industry: 'Trades',
+        likes: 1500,
+        comments: 60,
+        resumeDetails: {
+            bio: "Master Electrician with over 15 years of field experience.",
+            experience: "Owner of Wilson Electric for 5 years, Foreman at PowerCo for 10 years.",
+            education: "Trade School Diploma, Electrical Tech (2008)",
+            certifications: ["Master Electrician License", "OSHA 30"],
+            skills: ["Commercial Wiring", "Blueprint Reading", "Troubleshooting", "Team Management"],
+        },
+        jobDetails: {
+            title: "Commercial Electrician",
+            salary: "$35 - $45 / hour",
+            description: "Join our team for large-scale commercial projects.",
+            requirements: ["Journeyman or Master License", "Own tools", "Valid driver's license"],
+        },
+        jobType: 'Contract',
+        tags: ["Electrician", "Trades", "Construction"]
+    },
+    {
+        id: '6',
+        name: 'Maria Rodriguez',
+        videoSrc: 'http://www.walrusandcarpenter.com/assets/verticalvideo/RW20seconds_2.mp4',
+        poster: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/Subway.jpg',
+        username: 'chef_maria',
+        userAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Maria',
+        description: 'Executive Chef with a passion for farm-to-table cuisine. Creating culinary experiences. #culinary #chef',
+        industry: 'Service',
+        likes: 2800,
+        comments: 95,
+        resumeDetails: {
+            bio: "Innovative Executive Chef focused on sustainable and local ingredients.",
+            experience: "Executive Chef at The Green Table, Sous Chef at Le Petit Bistro.",
+            education: "Culinary Arts Degree, Culinary Institute (2014)",
+            certifications: ["ServSafe Manager", "Certified Executive Chef"],
+            skills: ["Menu Planning", "Kitchen Management", "French Cuisine", "Inventory Control"],
+        },
+        jobDetails: {
+            title: "Executive Chef",
+            salary: "$80k - $100k",
+            description: "Lead our kitchen team and create seasonal menus.",
+            requirements: ["5+ years kitchen management", "Culinary degree preferred", "Passion for sustainability"],
+        },
+        tags: ["Chef", "Culinary", "Hospitality"]
+    }
 ];

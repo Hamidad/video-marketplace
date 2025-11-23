@@ -34,7 +34,7 @@ export function JobApplicationModal({ jobId, employerName, onClose, onSuccess }:
                 onSuccess();
                 onClose();
             }, 1500);
-        } catch (error) {
+        } catch {
             console.error('Application failed');
         } finally {
             setIsSending(false);
@@ -47,7 +47,7 @@ export function JobApplicationModal({ jobId, employerName, onClose, onSuccess }:
 
                 <div className="p-4 border-b border-gray-100 dark:border-zinc-800 flex justify-between items-center">
                     <h3 className="font-bold text-lg">Apply to {employerName}</h3>
-                    <button onClick={onClose} className="p-1 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full">
+                    <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full" aria-label="Close">
                         <X size={20} />
                     </button>
                 </div>

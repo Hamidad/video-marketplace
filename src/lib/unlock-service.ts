@@ -7,7 +7,8 @@ export const unlockService = {
         return unlockedProfiles.has(seekerId);
     },
 
-    unlockProfile: async (seekerId: string, method: 'PAYMENT' | 'APPLICATION'): Promise<boolean> => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    unlockProfile: async (seekerId: string, _method: 'PAYMENT' | 'APPLICATION'): Promise<boolean> => {
         // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 1500));
 

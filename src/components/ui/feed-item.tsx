@@ -1,112 +1,165 @@
 'use client';
-
-import { useState } from 'react';
+import { useRef } from 'react';
 import { VideoPlayer } from './video-player';
-import { Heart, MessageCircle, Share2, Bookmark, Lock, Unlock } from 'lucide-react';
+import { Heart, Share2, Bookmark, Info, SlidersHorizontal } from 'lucide-react';
 import Image from 'next/image';
-import { unlockService } from '@/lib/unlock-service';
-import { PaymentModal } from './payment-modal';
 import { cn } from '@/lib/utils';
+import { useUserRole } from '@/hooks/use-user-role';
+import { useInteractions } from '@/hooks/use-interactions';
+import { useToast } from './toast-context';
+import { unlockService } from '@/lib/unlock-service';
+
+import { useAuth } from '@/hooks/use-auth';
 
 interface FeedItemProps {
+    id?: string;
     videoSrc: string;
     poster?: string;
     username: string;
+    name?: string;
     userAvatar: string;
     description: string;
-    likes: number;
-    comments: number;
+    tags?: string[];
+    resumeDetails?: any;
+    jobDetails?: any;
+    onFilterClick?: () => void;
+    onShowDetails?: () => void;
 }
 
-export function FeedItem({ videoSrc, poster, username, userAvatar, description, likes, comments }: FeedItemProps) {
-    const [isUnlocked, setIsUnlocked] = useState(false);
-    const [showPaymentModal, setShowPaymentModal] = useState(false);
+export function FeedItem({ id = '1', videoSrc, poster, username, name, userAvatar, description, tags = ['React', 'Next.js', 'Frontend'], resumeDetails, onFilterClick, onShowDetails }: FeedItemProps) {
+    const { role } = useUserRole();
+    const { isVideoLiked, isVideoSaved, toggleLikeVideo, toggleSaveVideo } = useInteractions();
+    const { showToast } = useToast();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const videoRef = useRef<any>(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const observer = useRef<any>(null);
+    const { isAuthenticated } = useAuth();
 
-    const handleUnlockClick = () => {
-        if (!isUnlocked) {
-            setShowPaymentModal(true);
+    const isLiked = isVideoLiked(id);
+    const isSaved = isVideoSaved(id);
+    const isUnlocked = unlockService.isUnlocked(username);
+
+    // Determine display name
+    const getDisplayName = () => {
+        // If job seeker (has resumeDetails) and not unlocked
+        // And user is employer OR not authenticated (signed out)
+        if (resumeDetails && !isUnlocked && (role === 'employer' || !isAuthenticated)) {
+            return name ? name.split(' ')[0] : username;
+        }
+        // Otherwise show full name or username
+        return name || username;
+    };
+
+    const displayName = getDisplayName();
+
+    const handleShare = () => {
+        if (navigator.share) {
+            navigator.share({
+                title: `Check out ${displayName}'s profile`,
+                text: description,
+                url: window.location.href,
+            }).catch(console.error);
+        } else {
+            // Fallback
+            navigator.clipboard.writeText(window.location.href);
+            showToast('Link copied to clipboard!', 'success');
         }
     };
 
     return (
-        <div className="relative w-full h-[calc(100vh-4rem)] snap-start">
-            <VideoPlayer src={videoSrc} poster={poster} autoPlay className="h-full" />
+        <div className="relative w-full h-full snap-start snap-always">
+            <VideoPlayer src={videoSrc} poster={poster} autoPlay className="h-full object-cover" />
 
             {/* Overlay Info */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 via-black/50 to-transparent pt-32 pb-24">
+            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/90 pointer-events-none" />
+
+            <div className="absolute bottom-0 left-0 right-0 p-4 pb-4 pt-32 bg-gradient-to-t from-black via-black/60 to-transparent">
                 <div className="flex items-end justify-between">
                     <div className="flex-1 mr-12">
                         <div className="flex items-center gap-2 mb-3">
                             <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white relative">
-                                <Image src={userAvatar} alt={username} fill className="object-cover" />
+                                <Image src={userAvatar} alt={displayName} fill className="object-cover" />
                             </div>
                             <div>
-                                <span className="text-white font-bold text-lg block leading-tight">@{username}</span>
-                                {isUnlocked ? (
-                                    <span className="text-green-400 text-xs flex items-center gap-1">
-                                        <Unlock size={10} /> Unlocked
-                                    </span>
-                                ) : (
-                                    <button
-                                        onClick={handleUnlockClick}
-                                        className="text-yellow-400 text-xs flex items-center gap-1 hover:underline"
-                                    >
-                                        <Lock size={10} /> Unlock Profile
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className={cn("transition-all duration-300", !isUnlocked && "blur-sm select-none")}>
-                            <p className="text-white/90 text-sm line-clamp-2">{description}</p>
-                            <div className="mt-2 flex gap-2">
-                                <span className="text-xs bg-white/20 px-2 py-1 rounded text-white">Resume.pdf</span>
-                                <span className="text-xs bg-white/20 px-2 py-1 rounded text-white">contact@email.com</span>
-                            </div>
-                        </div>
-
-                        {!isUnlocked && (
-                            <div className="absolute bottom-28 left-4 right-16">
+                                <span className="text-white font-bold text-lg block leading-tight">@{displayName}</span>
                                 <button
-                                    onClick={handleUnlockClick}
-                                    className="bg-blue-600 text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg animate-pulse"
+                                    onClick={onShowDetails}
+                                    className="mt-1 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1 transition-all active:scale-95"
                                 >
-                                    Unlock to View Details
+                                    <Info size={12} />
+                                    Details
                                 </button>
                             </div>
-                        )}
+                        </div>
+
+                        <div className="transition-all duration-300">
+                            <p className="text-white/90 text-sm line-clamp-2 mb-2">{description}</p>
+                            <div className="flex flex-wrap gap-2">
+                                {tags.map(tag => (
+                                    <span key={tag} className="text-xs bg-black/40 backdrop-blur-sm px-2 py-1 rounded text-zinc-300">
+                                        #{tag}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Right Action Bar */}
-            <div className="absolute bottom-24 right-2 flex flex-col gap-6 items-center">
-                <ActionBtn icon={Heart} label={likes.toString()} />
-                <ActionBtn icon={MessageCircle} label={comments.toString()} />
-                <ActionBtn icon={Bookmark} label="Save" />
-                <ActionBtn icon={Share2} label="Share" />
-            </div>
+            <div className="absolute bottom-4 right-2 flex flex-col gap-6 items-center">
+                {/* Share */}
+                <button
+                    aria-label="Share video"
+                    onClick={handleShare}
+                    className="flex flex-col items-center gap-1 group active:scale-95 transition-transform"
+                >
+                    <div className="p-2 rounded-full bg-black/40 backdrop-blur-sm group-active:scale-90 transition-transform">
+                        <Share2 className="w-7 h-7 text-white" />
+                    </div>
+                    <span className="text-white text-xs font-medium shadow-black drop-shadow-md">Share</span>
+                </button>
 
-            {showPaymentModal && (
-                <PaymentModal
-                    seekerId={username}
-                    seekerName={username}
-                    price={4.99}
-                    onClose={() => setShowPaymentModal(false)}
-                    onSuccess={() => setIsUnlocked(true)}
-                />
-            )}
+                {/* Like */}
+                <button
+                    onClick={() => {
+                        toggleLikeVideo(id);
+                        if (!isLiked) showToast('Liked video', 'success');
+                    }}
+                    className="flex flex-col items-center gap-1 group active:scale-95 transition-transform"
+                >
+                    <div className="p-2 rounded-full bg-black/40 backdrop-blur-sm group-active:scale-90 transition-transform">
+                        <Heart className={cn("w-7 h-7 transition-colors", isLiked ? "fill-red-500 text-red-500" : "text-white")} />
+                    </div>
+                    <span className="text-white text-xs font-medium shadow-black drop-shadow-md">Like</span>
+                </button>
+
+                {/* Save */}
+                <button
+                    onClick={() => {
+                        toggleSaveVideo(id);
+                        if (!isSaved) showToast('Saved to collection', 'success');
+                    }}
+                    className="flex flex-col items-center gap-1 group active:scale-95 transition-transform"
+                >
+                    <div className="p-2 rounded-full bg-black/40 backdrop-blur-sm group-active:scale-90 transition-transform">
+                        <Bookmark className={cn("w-7 h-7 transition-colors", isSaved ? "fill-yellow-500 text-yellow-500" : "text-white")} />
+                    </div>
+                    <span className="text-white text-xs font-medium shadow-black drop-shadow-md">Save</span>
+                </button>
+
+                {/* Filter */}
+                <button
+                    onClick={onFilterClick}
+                    className="flex flex-col items-center gap-1 group active:scale-95 transition-transform"
+                >
+                    <div className="p-2 rounded-full bg-black/40 backdrop-blur-sm group-active:scale-90 transition-transform">
+                        <SlidersHorizontal className="w-7 h-7 text-white" />
+                    </div>
+                    <span className="text-white text-xs font-medium shadow-black drop-shadow-md">Filter</span>
+                </button>
+            </div>
         </div>
-    );
-}
-
-function ActionBtn({ icon: Icon, label }: { icon: React.ElementType, label: string }) {
-    return (
-        <button className="flex flex-col items-center gap-1 group">
-            <div className="p-2 rounded-full bg-black/40 backdrop-blur-sm group-active:scale-90 transition-transform">
-                <Icon className="w-7 h-7 text-white" />
-            </div>
-            <span className="text-white text-xs font-medium shadow-black drop-shadow-md">{label}</span>
-        </button>
     );
 }

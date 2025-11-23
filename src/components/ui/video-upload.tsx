@@ -5,7 +5,12 @@ import { Upload, X, Loader2 } from 'lucide-react';
 import { mockVideoService } from '@/lib/video-service';
 import { VideoPlayer } from '@/components/ui/video-player';
 
-export function VideoUpload() {
+interface VideoUploadProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onSuccess?: (video: any) => void;
+}
+
+export function VideoUpload({ onSuccess }: VideoUploadProps) {
     const [file, setFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
@@ -51,10 +56,18 @@ export function VideoUpload() {
         try {
             await mockVideoService.upload(file);
             // Handle success (e.g., redirect or show success message)
-            alert('Upload successful! (Mock)');
-        } catch (err) {
-            setError('Upload failed. Please try again.');
-        } finally {
+            // alert('Upload successful! (Mock)');
+            if (onSuccess) {
+                onSuccess({
+                    // eslint-disable-next-line react-hooks/purity
+                    id: Math.random().toString(36).substring(7),
+                    previewUrl: previewUrl,
+                    timestamp: new Date().toISOString()
+                });
+            }
+            clearFile();
+        } catch {
+            setError('Failed to upload video. Please try again.');
             setIsUploading(false);
         }
     };
@@ -86,6 +99,7 @@ export function VideoUpload() {
                     <div className="relative aspect-[9/16] bg-black rounded-lg overflow-hidden">
                         {previewUrl && <VideoPlayer src={previewUrl} />}
                         <button
+                            aria-label="Remove video"
                             onClick={clearFile}
                             className="absolute top-2 right-2 p-1 bg-black/50 rounded-full text-white"
                         >
@@ -100,6 +114,7 @@ export function VideoUpload() {
                     accept="video/*"
                     className="hidden"
                     onChange={handleFileSelect}
+                    title="Upload video"
                 />
             </div>
 

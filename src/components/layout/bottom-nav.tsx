@@ -4,8 +4,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, Heart, MessageCircle, Bookmark, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Locale } from '../../../i18n-config';
+import { Locale } from '../../i18n-config';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function BottomNav({ lang, dict }: { lang: Locale; dict: any }) {
     const pathname = usePathname();
 
@@ -43,7 +44,7 @@ export function BottomNav({ lang, dict }: { lang: Locale; dict: any }) {
     ];
 
     return (
-        <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 pb-safe">
+        <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-50 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 pb-safe">
             <div className="flex justify-around items-center h-16">
                 {navItems.map((item) => (
                     <Link

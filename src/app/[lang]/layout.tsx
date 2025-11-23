@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
-import { i18n, type Locale } from "../../../i18n-config";
+import { i18n, type Locale } from "../../i18n-config";
 import { getDictionary } from "../../../get-dictionary";
 import { BottomNav } from "@/components/layout/bottom-nav";
+import { ToastProvider } from "@/components/ui/toast-context";
+
+import { Header } from "@/components/ui/header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,12 +38,17 @@ export default async function RootLayout({
   const dict = await getDictionary(lang);
 
   return (
-    <html lang={lang} dir={lang === "ar" ? "rtl" : "ltr"}>
+    <html lang={lang} dir={lang === "ar" ? "rtl" : "ltr"} className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased pb-16`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex justify-center bg-gray-900`}
       >
-        {children}
-        <BottomNav lang={lang} dict={dict} />
+        <div className="w-full max-w-md h-full min-h-screen relative bg-white dark:bg-black shadow-2xl overflow-hidden">
+          <ToastProvider>
+            <Header />
+            {children}
+            <BottomNav lang={lang} dict={dict} />
+          </ToastProvider>
+        </div>
       </body>
     </html>
   );

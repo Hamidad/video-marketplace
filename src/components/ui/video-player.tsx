@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import { Play, Volume2, VolumeX } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface VideoPlayerProps {
@@ -65,10 +65,10 @@ export function VideoPlayer({ src, poster, autoPlay = false, className }: VideoP
                 </div>
             )}
 
-            {/* Mute Toggle */}
+            {/* Mute Toggle - Moved to top right (below Share) */}
             <button
                 onClick={toggleMute}
-                className="absolute bottom-20 right-4 p-2 rounded-full bg-black/50 text-white backdrop-blur-sm"
+                className="absolute top-4 right-4 p-2 rounded-full bg-black/50 text-white backdrop-blur-sm z-10"
             >
                 {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
             </button>
