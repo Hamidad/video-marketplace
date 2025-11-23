@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useState, useEffect } from 'react';
 import { MessageCircle, Search, User, Trash2 } from 'lucide-react';
 import { chatService, Chat } from '@/lib/chat-service';
@@ -8,7 +9,7 @@ import { ChatView } from '@/components/ui/chat-view';
 import { useSearchParams } from 'next/navigation';
 import { useToast } from '@/components/ui/toast-context';
 
-export default function InboxPage() {
+function InboxContent() {
     const [chats, setChats] = useState<Chat[]>([]);
     const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -199,5 +200,13 @@ export default function InboxPage() {
                 </div>
             )}
         </div>
+    );
+}
+
+export default function InboxPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-white dark:bg-black pt-16 px-4 flex items-center justify-center">Loading...</div>}>
+            <InboxContent />
+        </Suspense>
     );
 }
