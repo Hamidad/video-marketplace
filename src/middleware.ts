@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { i18n } from './i18n-config';
 import { match as matchLocale } from '@formatjs/intl-localematcher';
-import Negotiator from 'negotiator';
 
 function getLocale(request: NextRequest): string | undefined {
     // Negotiator expects plain object so we need to transform headers
@@ -13,9 +12,10 @@ function getLocale(request: NextRequest): string | undefined {
     const locales: string[] = i18n.locales;
 
     // Use negotiator and intl-localematcher to get best locale
-    const languages = new Negotiator({ headers: negotiatorHeaders }).languages(
-        locales
-    );
+    let languages: string[] = [i18n.defaultLocale];
+    if (request.headers.has('accept-language')) {
+        languages = [request.headers.get('accept-language')!];
+    }
 
     const locale = matchLocale(languages, locales, i18n.defaultLocale);
 
