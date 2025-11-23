@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.6.2",
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.84.0",
     "clsx": "^2.1.1",
     "i18next": "^25.6.3",
     "lucide-react": "^0.554.0",

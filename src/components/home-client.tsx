@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 import { Feed } from '@/components/ui/feed';
 import { LanguageSelection } from '@/components/onboarding/language-selection';
 import { AuthOptions } from '@/components/onboarding/auth-options';
+import { AuthForm } from '@/components/auth/auth-form';
 
 export function HomeClient() {
     // State to track the current step
-    // 'loading' -> 'language' -> 'auth' -> 'feed'
-    const [step, setStep] = useState<'loading' | 'language' | 'auth' | 'feed'>('loading');
+    // 'loading' -> 'language' -> 'auth' -> 'auth-form' -> 'feed'
+    const [step, setStep] = useState<'loading' | 'language' | 'auth' | 'auth-form' | 'feed'>('loading');
+    const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
 
     useEffect(() => {
         // Check if user has already onboarded
@@ -28,8 +30,16 @@ export function HomeClient() {
     };
 
     const handleAuthSelect = (option: 'signup' | 'signin' | 'guest') => {
-        console.log('Selected auth:', option);
-        // For prototype, we just move to feed and mark as onboarded
+        if (option === 'guest') {
+            localStorage.setItem('hasOnboarded', 'true');
+            setStep('feed');
+        } else {
+            setAuthMode(option);
+            setStep('auth-form');
+        }
+    };
+
+    const handleAuthSuccess = () => {
         localStorage.setItem('hasOnboarded', 'true');
         setStep('feed');
     };
@@ -42,6 +52,16 @@ export function HomeClient() {
 
     if (step === 'auth') {
         return <AuthOptions onSelect={handleAuthSelect} />;
+    }
+
+    if (step === 'auth-form') {
+        return (
+            <AuthForm
+                mode={authMode}
+                onBack={() => setStep('auth')}
+                onSuccess={handleAuthSuccess}
+            />
+        );
     }
 
     return <Feed />;

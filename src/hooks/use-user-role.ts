@@ -1,33 +1,31 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useAuth } from './use-auth';
+import { createClient } from '@/lib/supabase/client';
 
 type UserRole = 'employer' | 'seeker';
 
 export function useUserRole() {
-    const [role, setRole] = useState<UserRole>('employer');
+    const { user, loading } = useAuth();
+    const supabase = createClient();
 
-    useEffect(() => {
-        // Load from local storage
-        const stored = localStorage.getItem('userRole') as UserRole;
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        if (stored) setRole(stored);
+    const setUserRole = async (newRole: UserRole) => {
+        if (!user) return;
 
-        // Listen for changes
-        const handleStorageChange = () => {
-            const newRole = localStorage.getItem('userRole') as UserRole;
-            if (newRole) setRole(newRole);
-        };
+        try {
+            const { error } = await supabase
+                .from('profiles')
+                .update({ role: newRole })
+                .eq('id', user.id);
 
-        window.addEventListener('user-role-change', handleStorageChange);
-        return () => window.removeEventListener('user-role-change', handleStorageChange);
-    }, []);
+            if (error) throw error;
 
-    const setUserRole = (newRole: UserRole) => {
-        localStorage.setItem('userRole', newRole);
-        setRole(newRole);
-        window.dispatchEvent(new Event('user-role-change'));
+            // Reload to reflect changes since useAuth fetches on mount/session change
+            window.location.reload();
+        } catch (error) {
+            console.error('Error updating role:', error);
+        }
     };
 
-    return { role, setUserRole };
+    return { role: user?.role || 'seeker', setUserRole, loading };
 }

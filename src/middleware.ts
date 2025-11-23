@@ -22,7 +22,9 @@ function getLocale(request: NextRequest): string | undefined {
     return locale;
 }
 
-export function middleware(request: NextRequest) {
+import { updateSession } from '@/lib/supabase/middleware';
+
+export async function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
 
     // Check if there is any supported locale in the pathname
@@ -43,6 +45,8 @@ export function middleware(request: NextRequest) {
             )
         );
     }
+
+    return await updateSession(request);
 }
 
 export const config = {
