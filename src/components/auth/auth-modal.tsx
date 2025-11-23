@@ -24,7 +24,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
         // In a real app, this would show a form
         // Let's default to 'employer' for now, or maybe toggle?
         // For simplicity in this mock, let's just log them in as an employer
-        login('employer');
+        login();
         onClose();
     };
 

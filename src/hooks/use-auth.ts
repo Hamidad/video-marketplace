@@ -51,6 +51,7 @@ export function useAuth() {
         return () => {
             subscription.unsubscribe();
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const fetchProfile = async (authUser: SupabaseUser) => {
@@ -88,7 +89,7 @@ export function useAuth() {
         }
     };
 
-    const login = async (role: 'employer' | 'seeker') => {
+    const login = async () => {
         // For now, we'll just sign in with a demo account or trigger OAuth
         // Since the UI calls login(role), we might need to adapt this.
         // For this step, let's just trigger Google login as an example, 

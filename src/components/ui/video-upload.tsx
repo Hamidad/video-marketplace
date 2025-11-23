@@ -7,8 +7,7 @@ import { VideoPlayer } from '@/components/ui/video-player';
 import { INDUSTRIES } from '@/lib/mock-data';
 
 interface VideoUploadProps {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onSuccess?: (video: any) => void;
+    onSuccess?: (video: Record<string, unknown>) => void;
 }
 
 export function VideoUpload({ onSuccess }: VideoUploadProps) {
@@ -80,9 +79,10 @@ export function VideoUpload({ onSuccess }: VideoUploadProps) {
                 onSuccess(newVideo);
             }
             clearFile();
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Upload error:', err);
-            setError(err.message || 'Failed to upload video. Please try again.');
+            const errorMessage = err instanceof Error ? err.message : 'Failed to upload video. Please try again.';
+            setError(errorMessage);
             setIsUploading(false);
         }
     };

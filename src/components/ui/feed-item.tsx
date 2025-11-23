@@ -1,5 +1,4 @@
 'use client';
-import { useRef } from 'react';
 import { VideoPlayer } from './video-player';
 import { Heart, Share2, Bookmark, Info, SlidersHorizontal } from 'lucide-react';
 import Image from 'next/image';
@@ -20,8 +19,8 @@ interface FeedItemProps {
     userAvatar: string;
     description: string;
     tags?: string[];
-    resumeDetails?: any;
-    jobDetails?: any;
+    resumeDetails?: Record<string, unknown>;
+    jobDetails?: Record<string, unknown>;
     onFilterClick?: () => void;
     onShowDetails?: () => void;
 }
@@ -30,10 +29,6 @@ export function FeedItem({ id = '1', videoSrc, poster, username, name, userAvata
     const { role } = useUserRole();
     const { isVideoLiked, isVideoSaved, toggleLikeVideo, toggleSaveVideo } = useInteractions();
     const { showToast } = useToast();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const videoRef = useRef<any>(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const observer = useRef<any>(null);
     const { isAuthenticated } = useAuth();
 
     const isLiked = isVideoLiked(id);

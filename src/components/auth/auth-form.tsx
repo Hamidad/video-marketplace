@@ -51,9 +51,10 @@ export function AuthForm({ mode: initialMode, onBack, onSuccess }: AuthFormProps
                 showToast('Signed in successfully', 'success');
                 onSuccess();
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Auth error:', error);
-            showToast(error.message || 'Authentication failed', 'error');
+            const errorMessage = error instanceof Error ? error.message : 'Authentication failed';
+            showToast(errorMessage, 'error');
         } finally {
             setLoading(false);
         }

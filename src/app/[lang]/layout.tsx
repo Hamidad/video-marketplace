@@ -32,10 +32,10 @@ export default async function RootLayout({
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: Promise<any>;
+  params: Promise<{ lang: string }>;
 }>) {
   const { lang } = await params;
-  const dict = await getDictionary(lang);
+  const dict = await getDictionary(lang as Locale);
 
   return (
     <html lang={lang} dir={lang === "ar" ? "rtl" : "ltr"} className="dark">
@@ -46,7 +46,7 @@ export default async function RootLayout({
           <ToastProvider>
             <Header />
             {children}
-            <BottomNav lang={lang} dict={dict} />
+            <BottomNav lang={lang as Locale} dict={dict} />
           </ToastProvider>
         </div>
       </body>

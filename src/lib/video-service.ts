@@ -1,5 +1,22 @@
 import { createClient } from './supabase/client';
 
+interface VideoRow {
+    id: string;
+    title: string;
+    description: string;
+    video_url: string;
+    thumbnail_url: string | null;
+    industry: string | null;
+    job_type: string | null;
+    location: string | null;
+    salary_range: string | null;
+    user_id: string;
+    profiles: {
+        username: string | null;
+        avatar_url: string | null;
+    } | null;
+}
+
 export interface Video {
     id: string;
     title: string;
@@ -48,7 +65,7 @@ export const videoService = {
             return [];
         }
 
-        return data.map((video: any) => ({
+        return (data as VideoRow[]).map((video) => ({
             id: video.id,
             title: video.title,
             description: video.description,
@@ -78,7 +95,14 @@ export const videoService = {
         }));
     },
 
-    async uploadVideo(file: File, metadata: any) {
+    async uploadVideo(file: File, metadata: {
+        title: string;
+        description?: string;
+        industry?: string;
+        jobType?: string;
+        location?: string;
+        salaryRange?: string;
+    }) {
         const supabase = createClient();
         const { data: { user } } = await supabase.auth.getUser();
 
